@@ -1,0 +1,77 @@
+body {
+	font: 15px Arial,sans-serif;
+}
+a {
+	outline: none;
+}
+
+#app {
+	width: 72em;
+	margin: 5em auto;
+	padding: 0 1em;
+}
+
+.loading {
+	background: url(loading.gif) no-repeat;
+	width: 16px;
+	height: 16px;
+	margin: .3em auto;
+}
+.error {
+	text-align: center;
+	color: red;
+}
+
+table {
+	width: 100%;
+	margin: 1em 0;
+	box-shadow: 0 0 2px gray;
+	border-collapse: collapse;
+}
+table tr {
+	background-color: white;
+}
+table tr:nth-child(even) {
+	background-color: #eeeeee;
+}
+table th {
+	background-color: #eeeeee;
+	text-align: left;
+	padding: .5em;
+}
+table td {
+	padding: .5em;
+}
+
+#problems a {
+	text-decoration: none;
+}
+#problems td.myStatus,
+#problems td.friendStatus {
+	width: 1em;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.03);
+}
+#problems .solved td {
+	opacity: 0.5;
+}
+#problems .solved td.problem a {
+	text-decoration: line-through;
+}
+#problems .solved td.myStatus {
+	background-color: green;
+}
+#problems .solved td.myStatus a {
+	color: white;
+}
+
+.easy {
+	color: darkgreen;
+}
+.medium {
+	color: darkblue;
+}
+.hard {
+	color: darkred;
+}
+
