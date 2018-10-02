@@ -123,14 +123,8 @@ window.App = React.createClass({
 		var me = this.state.users[0];
 		var friends = this.state.users.slice(1);
 
-		var head = [];
-		head.push(<th>{me}</th>);
-		head.push(<th>Problem</th>);
-		friends.forEach(function(u) {
-			head.push(<th>{u}</th>);
-		});
-
 		var rows = [];
+		var done = 0;
 		this.state.problemset.forEach(function(id) {
 			var p = self.state.problems[id];
 			if (!p) {
@@ -157,8 +151,19 @@ window.App = React.createClass({
 				);
 			});
 
-			var clazz = solved[me][id] ? 'solved' : null;
+			var clazz = null;
+			if (solved[me][id]) {
+				clazz = 'solved';
+				done++;
+			}
 			rows.push(<tr key={id} className={clazz}>{cols}</tr>);
+		});
+
+		var head = [];
+		head.push(<th>{me}</th>);
+		head.push(<th>Problems (solved: {done}/{rows.length})</th>);
+		friends.forEach(function(u) {
+			head.push(<th>{u}</th>);
 		});
 
 		return (
