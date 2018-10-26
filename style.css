@@ -22,6 +22,11 @@ a {
 	color: red;
 }
 
+input {
+	width: 100%;
+	margin: 0.2rem;
+}
+
 table {
 	width: 100%;
 	margin: 1em 0;

@@ -35,7 +35,7 @@ window.App = createReactClass({
 		});
 
 		if (!params.problems || !params.users) {
-			this.setState({error: 'missing "problems" (e.g. "1073A,1073B") and/or "users" (e.g. "o948") parameter in location hash'});
+			this.setState({problemset: [], users: [], submits: {}});
 			return;
 		}
 
@@ -102,6 +102,9 @@ window.App = createReactClass({
 	render: function() {
 		if (this.state.error !== null) {
 			return <div className="error">({ this.state.error })</div>;
+		}
+		if (this.state.problemset.length === 0 || this.state.users.length === 0) {
+			return <ParametersForm onSubmit={({problems, usernames}) => window.location.hash = `problems=${encodeURIComponent(problems)}&users=${encodeURIComponent(usernames)}`}/>;
 		}
 		if (!this.state.contests || !this.state.problems
 				|| this.state.users.length !== Object.keys(this.state.submits).length) {
@@ -184,6 +187,32 @@ window.App = createReactClass({
 		$.ajax(opts);
 	})
 });
+
+const ParametersForm = ({onSubmit}) => {
+	const [usernames, setUsernames] = React.useState('');
+	const [problems, setProblems] = React.useState('');
+	const handleSubmit = e => {
+		e.preventDefault();
+		onSubmit({ usernames, problems });
+	};
+	return (
+		<form onSubmit={handleSubmit}>
+			<input
+				placeholder="Comma-separated list of <user-name>"
+				value={usernames}
+				onChange={e => setUsernames(e.target.value)}
+			/>
+			<br />
+			<input
+				placeholder="Comma-separated list of <contest-id><problem-index>"
+				value={problems}
+				onChange={e => setProblems(e.target.value)}
+			/>
+			<br />
+			<input type="submit" value="Show" />
+		</form>
+	);
+};
 
 var SubmitFmt = createReactClass({
 	render: function() {
