@@ -35,7 +35,7 @@ window.App = React.createClass({
 		});
 
 		if (!params.problems || !params.users) {
-			this.setState({error: 'missing "problems" and/or "users" parameter'});
+			this.setState({error: 'missing "problems" (e.g. "1073A,1073B") and/or "users" (e.g. "o948") parameter in location hash'});
 			return;
 		}
 
