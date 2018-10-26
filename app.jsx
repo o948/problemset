@@ -278,7 +278,7 @@ function limitRate(n, f) {
 		} else {
 			ts.push(ts[ts.length - n] + 1000);
 		}
-		setTimeout(f, ts[ts.length - 1] - now, args);
+		setTimeout(f.bind(this), ts[ts.length - 1] - now, args);
 	};
 }
 
