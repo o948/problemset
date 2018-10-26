@@ -1,8 +1,8 @@
 'use strict';
 
 (function() {
-window.App = React.createClass({
 
+window.App = createReactClass({
 	getInitialState: function() {
 		return {
 			error: null,
@@ -185,7 +185,7 @@ window.App = React.createClass({
 	})
 });
 
-var SubmitFmt = React.createClass({
+var SubmitFmt = createReactClass({
 	render: function() {
 		var s = this.props.submit;
 		if (!s) {
@@ -196,7 +196,7 @@ var SubmitFmt = React.createClass({
 	}
 });
 
-var ProblemFmt = React.createClass({
+var ProblemFmt = createReactClass({
 	render: function() {
 		var p = this.props.problem;
 		var c = this.props.contest;
