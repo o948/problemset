@@ -6,9 +6,7 @@ window.App = React.createClass({
 	getInitialState: function() {
 		return {
 			error: null,
-			contests: null,
 			problems: null,
-			problemStats: null,
 			problemset: [],
 			users: [],
 			submits: {}
@@ -49,20 +47,6 @@ window.App = React.createClass({
 	load: function() {
 		var self = this;
 		this.ajax({
-			url: 'https://codeforces.com/api/contest.list',
-			success: function(data) {
-				if (data.status !== 'OK') {
-					self.setState({error: data.comment});
-					return;
-				}
-				var cs = {};
-				data.result.forEach(function(c) {
-					cs[c.id] = c;
-				});
-				self.setState({contests: cs});
-			}
-		});
-		this.ajax({
 			url: 'https://codeforces.com/api/problemset.problems',
 			success: function(data) {
 				if (data.status !== 'OK') {
@@ -70,14 +54,10 @@ window.App = React.createClass({
 					return;
 				}
 				var ps = {};
-				var ss = {};
 				data.result.problems.forEach(function(p) {
 					ps[p.contestId + p.index] = p;
 				});
-				data.result.problemStatistics.forEach(function(s) {
-					ss[s.contestId + s.index] = s;
-				});
-				self.setState({problems: ps, problemStats: ss});
+				self.setState({problems: ps});
 			}
 		});
 	},
@@ -103,8 +83,7 @@ window.App = React.createClass({
 		if (this.state.error !== null) {
 			return <div className="error">({ this.state.error })</div>;
 		}
-		if (!this.state.contests || !this.state.problems
-				|| this.state.users.length !== Object.keys(this.state.submits).length) {
+		if (!this.state.problems || this.state.users.length !== Object.keys(this.state.submits).length) {
 			return <div className="loading"></div>;
 		}
 
@@ -130,7 +109,6 @@ window.App = React.createClass({
 			if (!p) {
 				return;
 			}
-			var c = self.state.contests[p.contestId];
 
 			var cols = [];
 			cols.push(
@@ -140,7 +118,7 @@ window.App = React.createClass({
 			);
 			cols.push(
 				<td className="problem">
-					<ProblemFmt problem={p} contest={c} />
+					<ProblemFmt problem={p} />
 				</td>
 			);
 			friends.forEach(function(u) {
@@ -199,42 +177,28 @@ var SubmitFmt = React.createClass({
 var ProblemFmt = React.createClass({
 	render: function() {
 		var p = this.props.problem;
-		var c = this.props.contest;
 
 		var name = p.contestId + p.index + ' - ' + p.name;
-		var div = contestDiv(c);
-		if (div) {
-			name += ' (Div. ' + div + ')';
-		}
-
+		var style = {color: color(p.rating)};
 		var url = 'https://codeforces.com/problemset/';
 		if (p.contestId >= 100000) {
 			url += 'gymProblem/' + p.contestId + '/' + p.index;
 		} else {
 			url += 'problem/' + p.contestId + '/' + p.index;
 		}
-		return <a href={url} className={problemClass(p, div)} target="_blank">{name}</a>;
+		return <a href={url} style={style} target="_blank">{name}</a>;
 	}
 });
 
-function contestDiv(c) {
-	if (c.name.indexOf('Div. 1') !== -1 || c.name.indexOf('Div 1') !== -1) {
-		return 1;
-	}
-	if (c.name.indexOf('Div. 2') !== -1 || c.name.indexOf('Div 2') !== -1) {
-		return 2;
-	}
-	return 0;
-}
-
-function problemClass(p, div) {
-	if (div === 2 && p.index < 'C') {
-		return 'easy';
-	}
-	if (div === 1 && p.index >= 'C' || div === 2 && p.index >= 'E') {
-		return 'hard';
-	}
-	return 'medium';
+function color(rating) {
+	if (!rating) return 'black';
+	if (rating <= 1200) return 'gray';
+	if (rating <= 1400) return 'green';
+	if (rating <= 1600) return '#03A89E';
+	if (rating <= 1900) return 'blue';
+	if (rating <= 2200) return '#AA00AA';
+	if (rating <= 2400) return '#FF8C00';
+	return 'red';
 }
 
 function limitRate(n, f) {
