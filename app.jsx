@@ -102,6 +102,7 @@ window.App = React.createClass({
 		var me = this.state.users[0];
 		var friends = this.state.users.slice(1);
 
+		var ratings = {};
 		var rows = [];
 		var done = 0;
 		this.state.problemset.forEach(function(id) {
@@ -109,6 +110,8 @@ window.App = React.createClass({
 			if (!p) {
 				return;
 			}
+
+			ratings[id] = self.state.problems[id].rating || 0;
 
 			var cols = [];
 			cols.push(
@@ -135,6 +138,10 @@ window.App = React.createClass({
 				done++;
 			}
 			rows.push(<tr key={id} className={clazz}>{cols}</tr>);
+		});
+
+		rows.sort(function(r1, r2) {
+			return ratings[r1.key] - ratings[r2.key];
 		});
 
 		var head = [];
